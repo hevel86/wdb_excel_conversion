@@ -1,33 +1,30 @@
-# Use an official Python runtime as a parent image
-FROM python:3
+# Use the official Python base image
+FROM python:3.9-slim-buster
 
-# Set the working directory to /app
+# Install necessary dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    openjdk-11-jre-headless \
+    libreoffice \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
+RUN pip install --no-cache-dir openpyxl
+
+# Set the working directory
 WORKDIR /app
 
-# Copy the current directory contents into the container at /app
-COPY . /app
+# Download the converter jar file into the container
+RUN curl -o /app/WorksDatabaseConverter.jar https://minio.mbd-inc.io/wdb-excel-conversion/WorksDatabaseConverter.jar
 
-# Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Download the works database converter
-RUN wget https://minio.mbd-inc.io/wdb-excel-conversion/WorksDatabaseConverter.jar
+# Copy your Python script into the container
+COPY ./main.py /app/main.py
 
 # Set environment variables
-ENV SOURCE_DIR=/app/source
-ENV OUTPUT_DIR=/app/output
+ENV LIBREOFFICE_PATH=/usr/bin/soffice
 ENV CONVERTER_PATH=/app/WorksDatabaseConverter.jar
-ENV LIBREOFFICE_PATH=/usr/bin/libreoffice
+ENV DOCKER_ENV=1
 
-# Install LibreOffice
-RUN apt-get update && apt-get install -y libreoffice
-
-# Install Java
-RUN apt-get update && apt-get install -y default-jre
-
-# Setup volumes
-VOLUME /source
-VOLUME /output
-
-# Run the command to convert WorksDatabase files to Excel
-CMD ["python", "main.py"]
+# Set the entrypoint to run your script
+ENTRYPOINT ["python", "/app/main.py"]
