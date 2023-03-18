@@ -4,15 +4,26 @@ import glob
 import re
 from openpyxl import load_workbook
 
-# ADMIN folder location
-#source_dir = r"C:\Users\archa\PycharmProjects\wdb_excel_conversion\ADMIN"
-source_dir = r"C:\Users\archa\Downloads"
-output_dir = r"C:\Users\archa\PycharmProjects\wdb_excel_conversion\wdb_converted"
-converter_path = r"C:\Users\archa\Downloads\WorksDatabaseConverter.jar"
-header_start_row = 1
+# Check if the script is running in a docker container
+if "DOCKER_ENV" in os.environ:
+    source_dir = "/app/source"
+    output_dir = "/app/output"
+    converter_path = os.environ["CONVERTER_PATH"]
+    print(converter_path)
 
-# Path to the LibreOffice executable
-libreoffice_path = r'C:\Program Files\LibreOffice\program\soffice.exe'
+    # Path to the LibreOffice executable
+    libreoffice_path = os.environ["LIBREOFFICE_PATH"]
+    print(libreoffice_path)
+else:
+    # Set Windows paths
+    source_dir = r"C:\Users\archa\Downloads"
+    output_dir = r"C:\Users\archa\Downloads"
+    converter_path = r"C:\Users\archa\Downloads\WorksDatabaseConverter.jar"
+    # Path to the LibreOffice executable
+    libreoffice_path = r'C:\Program Files\LibreOffice\program\soffice.exe'
+
+# Start at the first row
+header_start_row = 1
 
 for root, dirs, files in os.walk(source_dir):
     for file in files:
