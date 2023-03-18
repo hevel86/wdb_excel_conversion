@@ -4,6 +4,8 @@ import glob
 import re
 from openpyxl import load_workbook
 
+WDB_JAVA_CONVERTER = "WorksDatabaseConverter.jar"
+
 # Check if the script is running in a docker container
 if "DOCKER_ENV" in os.environ:
     source_dir = "/app/source"
@@ -16,10 +18,10 @@ if "DOCKER_ENV" in os.environ:
     print(libreoffice_path)
 else:
     # Set Windows paths
-    source_dir = r"C:\Users\archa\Downloads"
-    output_dir = r"C:\Users\archa\Downloads"
-    converter_path = r"C:\Users\archa\Downloads\WorksDatabaseConverter.jar"
-    # Path to the LibreOffice executable
+    source_dir = os.path.expanduser("~/Downloads")
+    output_dir = os.path.expanduser("~/Downloads")
+    converter_path = os.path.join(source_dir, WDB_JAVA_CONVERTER)
+    # Path to the Windows x64 LibreOffice executable
     libreoffice_path = r'C:\Program Files\LibreOffice\program\soffice.exe'
 
 # Start at the first row
