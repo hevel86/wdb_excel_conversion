@@ -8,7 +8,7 @@ Docker Compose is the recommended use case so you don't clutter your PC with Jav
 ```docker
   wdb_excel_conversion:
     container_name: wdb_excel_conversion
-    image: gitea.mbd-inc.io/michael.dages/wdb_excel_conversion/wdb_excel_conversion:latest
+    image: gitea.mbd-inc.io/michael.dages/wdb_excel_conversion:latest
     volumes:
       - /path/to/source:/app/source
       - /path/to/output:/app/output
