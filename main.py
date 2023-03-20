@@ -3,6 +3,11 @@ import os
 import glob
 import re
 from openpyxl import load_workbook
+import timeit
+import datetime
+
+# Begin tracking the time it takes to run
+start_time = timeit.default_timer()
 
 WDB_JAVA_CONVERTER = "WorksDatabaseConverter.jar"
 
@@ -11,11 +16,9 @@ if "DOCKER_ENV" in os.environ:
     source_dir = "/app/source"
     output_dir = "/app/output"
     converter_path = os.environ["CONVERTER_PATH"]
-    print(converter_path)
 
     # Path to the LibreOffice executable
     libreoffice_path = os.environ["LIBREOFFICE_PATH"]
-    print(libreoffice_path)
 else:
     # Set Windows paths
     source_dir = os.path.expanduser("~/Downloads")
@@ -27,9 +30,12 @@ else:
 # Start at the first row
 header_start_row = 1
 
+# Track number of files converted
+converted = 0
+
 for root, dirs, files in os.walk(source_dir):
     for file in files:
-        if file.endswith(".WDB"):
+        if file.lower().endswith(".wdb"):
             # construct the output file name by replacing the file extension with xlsx
             output_file = os.path.splitext(file)[0] + ".xlsx"
 
@@ -78,3 +84,7 @@ for root, dirs, files in os.walk(source_dir):
             os.remove(csv_file)
 
             print(f"Converted {input_file} to {output_file} in {output_dir}")
+            converted += 1
+
+runtime = timeit.default_timer() - start_time
+print(f"Converted files: {converted} in {datetime.timedelta(seconds=runtime)}")
