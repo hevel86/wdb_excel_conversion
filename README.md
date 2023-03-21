@@ -41,7 +41,7 @@ pip install openpyxl
 2. Run the script:
 
 ```bash
- python wdb_to_xlsx.py
+ python main.py
 ```
 
 Replace `path/to/source`, `/path/to/WorksDatabaseConverter.jar`, and `/path/to/soffice` with the appropriate paths on your system.
