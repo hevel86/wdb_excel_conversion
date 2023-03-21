@@ -35,7 +35,6 @@ pip install openpyxl
 1. Adjust the following variables in the script according to your system and requirements:
 
    - source_dir: The directory where the WDB files are located.
-   * output_dir: The directory where the converted XLSX files will be saved.
    * converter_path: The path to the WorksDatabaseConverter.jar file.
    * libreoffice_path: The path to the LibreOffice executable.
 
@@ -45,7 +44,7 @@ pip install openpyxl
  python wdb_to_xlsx.py
 ```
 
-Replace `path/to/source`, `/path/to/output`, `/path/to/WorksDatabaseConverter.jar`, and `/path/to/soffice` with the appropriate paths on your system.
+Replace `path/to/source`, `/path/to/WorksDatabaseConverter.jar`, and `/path/to/soffice` with the appropriate paths on your system.
 
 ## Docker Compose (Preferred Method)
 
@@ -58,9 +57,8 @@ Replace `path/to/source`, `/path/to/output`, `/path/to/WorksDatabaseConverter.ja
       - LIBREOFFICE_PATH=/path/to/soffice #optional
     volumes:
       - /path/to/source:/app/source
-      - /path/to/output:/app/output
 ```
-Replace `path/to/source`, `/path/to/output`, `/path/to/WorksDatabaseConverter.jar`, and `/path/to/soffice` with the appropriate paths on your system.
+Replace `path/to/source`, `/path/to/WorksDatabaseConverter.jar`, and `/path/to/soffice` with the appropriate paths on your system.
 
 ## License
 
