@@ -14,7 +14,6 @@ WDB_JAVA_CONVERTER = "WorksDatabaseConverter.jar"
 # Check if the script is running in a docker container
 if "DOCKER_ENV" in os.environ:
     source_dir = "/app/source"
-    output_dir = "/app/output"
     converter_path = os.environ["CONVERTER_PATH"]
 
     # Path to the LibreOffice executable
@@ -22,7 +21,6 @@ if "DOCKER_ENV" in os.environ:
 else:
     # Set Windows paths
     source_dir = os.path.expanduser("~/Downloads")
-    output_dir = os.path.expanduser("~/Downloads")
     converter_path = os.path.join(source_dir, WDB_JAVA_CONVERTER)
     # Path to the Windows x64 LibreOffice executable
     libreoffice_path = r'C:\Program Files\LibreOffice\program\soffice.exe'
@@ -43,7 +41,12 @@ for root, dirs, files in os.walk(source_dir):
             input_file = os.path.join(root, file)
 
             # construct the output file path
+            output_dir = os.path.dirname(input_file)
             output_path = os.path.join(output_dir, output_file)
+
+            if os.path.isfile(output_path):
+                print(f"{output_file} already exists.  Skipping...")
+                continue
 
             # Call the WorksDatabaseConverter.jar to get the header fields
             p = subprocess.Popen(['java', '-jar', converter_path, input_file], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -80,10 +83,10 @@ for root, dirs, files in os.walk(source_dir):
             wb.save(output_path)
 
             # Remove the CSV file
-            csv_file = os.path.join(source_dir, os.path.splitext(file)[0] + ".csv")
+            csv_file = os.path.join(os.path.splitext(input_file)[0] + ".csv")
             os.remove(csv_file)
 
-            print(f"Converted {input_file} to {output_file} in {output_dir}")
+            print(f"Converted {os.path.basename(input_file).split('/')[-1]} to {output_file} in {output_dir}")
             converted += 1
 
 runtime = timeit.default_timer() - start_time
