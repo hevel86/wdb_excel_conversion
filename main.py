@@ -50,6 +50,8 @@ for root, dirs, files in os.walk(source_dir):
 
                 if target_modified_time > source_modified_time:
                     print(f"{output_file} already exists and is newer than {file}.  Skipping...")
+                else:
+                    print(f"{output_file} already exists, but is older than {file}.  Proceeding to conversion.")
                 continue
 
             # Call the WorksDatabaseConverter.jar to get the header fields
